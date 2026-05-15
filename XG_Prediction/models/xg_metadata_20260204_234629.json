@@ -1,0 +1,59 @@
+{
+  "created_at": "20260204_234629",
+  "model_type": "xgboost.XGBClassifier",
+  "objective": "binary:logistic",
+  "best_iteration": 194,
+  "feature_cols": [
+    "x",
+    "y",
+    "distance_to_goal",
+    "angle_to_goal",
+    "gk_distance",
+    "nearest_defender_distance",
+    "defenders_within_1",
+    "defenders_within_2",
+    "defenders_within_3",
+    "defenders_in_lane",
+    "under_pressure",
+    "shot_first_time",
+    "shot_open_goal",
+    "shot_follows_dribble",
+    "shot_deflected",
+    "is_penalty",
+    "is_free_kick_shot",
+    "shot_type",
+    "body_part",
+    "shot_technique",
+    "play_pattern"
+  ],
+  "num_cols": [
+    "x",
+    "y",
+    "distance_to_goal",
+    "angle_to_goal",
+    "gk_distance",
+    "nearest_defender_distance",
+    "defenders_within_1",
+    "defenders_within_2",
+    "defenders_within_3",
+    "defenders_in_lane"
+  ],
+  "bool_cols": [
+    "under_pressure",
+    "shot_first_time",
+    "shot_open_goal",
+    "shot_follows_dribble",
+    "shot_deflected",
+    "is_penalty",
+    "is_free_kick_shot"
+  ],
+  "cat_cols": [
+    "shot_type",
+    "body_part",
+    "shot_technique",
+    "play_pattern"
+  ],
+  "train_rows": 6484,
+  "val_rows": 1454,
+  "test_rows": 1380
+}
