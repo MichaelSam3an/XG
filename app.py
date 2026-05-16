@@ -6,23 +6,16 @@ import json
 app = Flask(__name__)
 
 # Load model
-model = joblib.load(r"models\xg_model_xgb_20260204_234629.joblib")
+model = joblib.load("xg_model_xgb_20260204_234629.joblib")
 
 # Load preprocess pipeline
-preprocess = joblib.load(r"models\xg_preprocess_20260204_234629.joblib")
+preprocess = joblib.load("xg_preprocess_20260204_234629.joblib")
 
 # Load metadata
-with open(r"models\xg_metadata_20260204_234629.json") as f:
+with open("xg_metadata_20260204_234629.json") as f:
     metadata = json.load(f)
 
 feature_cols = metadata["feature_cols"]
-
-
-@app.route("/")
-def home():
-    return jsonify({
-        "message": "xG API Running"
-    })
 
 
 @app.route("/predict", methods=["POST"])
