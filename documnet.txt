@@ -1,0 +1,184 @@
+xG Prediction API Documentation
+Base URL
+http://localhost:5000
+Content-Type
+application/json
+1. Health Check
+
+Used to verify that the API server is running correctly.
+
+Endpoint
+/
+Method
+GET
+Returns
+{
+  "message": "xG API Running"
+}
+2. Predict Expected Goals (xG)
+
+Used to calculate the probability of a football shot becoming a goal.
+
+The API uses:
+
+XGBoost Machine Learning
+Freeze-frame contextual analysis
+Shot geometry
+Defensive pressure metrics
+Endpoint
+/predict
+Method
+POST
+Request Payload (JSON)
+
+Example:
+
+{
+  "x": 102,
+  "y": 40,
+  "distance_to_goal": 18.2,
+  "angle_to_goal": 0.42,
+  "gk_distance": 5.4,
+  "nearest_defender_distance": 1.8,
+  "defenders_within_1": 0,
+  "defenders_within_2": 1,
+  "defenders_within_3": 2,
+  "defenders_in_lane": 1,
+  "under_pressure": 1,
+  "shot_first_time": 0,
+  "shot_open_goal": 0,
+  "shot_follows_dribble": 0,
+  "shot_deflected": 0,
+  "is_penalty": 0,
+  "is_free_kick_shot": 0,
+  "shot_type": "Open Play",
+  "body_part": "Right Foot",
+  "shot_technique": "Normal",
+  "play_pattern": "Regular Play"
+}
+Returns
+
+Example:
+
+{
+  "xg": 0.2841
+}
+Response Meaning
+
+The returned xG value represents:
+
+Probability that the shot becomes a goal
+
+Examples:
+
+xG	Interpretation
+0.02	Very low-quality chance
+0.15	Difficult shot
+0.45	Good scoring opportunity
+0.75	Very dangerous chance
+0.90+	Almost certain goal
+Feature Definitions
+Feature	Description
+x	Shot X coordinate on pitch
+y	Shot Y coordinate on pitch
+distance_to_goal	Distance from shot to goal center
+angle_to_goal	Open shooting angle
+gk_distance	Distance to goalkeeper
+nearest_defender_distance	Closest defender distance
+defenders_within_1	Defenders within 1 meter
+defenders_within_2	Defenders within 2 meters
+defenders_within_3	Defenders within 3 meters
+defenders_in_lane	Defenders blocking shooting lane
+under_pressure	Whether shooter is pressured
+shot_first_time	First-time shot indicator
+shot_open_goal	Whether goal is open
+shot_follows_dribble	Shot after dribble
+shot_deflected	Whether shot was deflected
+is_penalty	Penalty shot indicator
+is_free_kick_shot	Free-kick shot indicator
+shot_type	Open Play / Penalty / Free Kick
+body_part	Right Foot / Left Foot / Head
+shot_technique	Shot execution technique
+play_pattern	Attack build-up pattern
+Example JavaScript Fetch Request
+fetch("http://localhost:5000/predict", {
+    method: "POST",
+    headers: {
+        "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+        x: 102,
+        y: 40,
+        distance_to_goal: 18.2,
+        angle_to_goal: 0.42,
+        gk_distance: 5.4,
+        nearest_defender_distance: 1.8,
+        defenders_within_1: 0,
+        defenders_within_2: 1,
+        defenders_within_3: 2,
+        defenders_in_lane: 1,
+        under_pressure: 1,
+        shot_first_time: 0,
+        shot_open_goal: 0,
+        shot_follows_dribble: 0,
+        shot_deflected: 0,
+        is_penalty: 0,
+        is_free_kick_shot: 0,
+        shot_type: "Open Play",
+        body_part: "Right Foot",
+        shot_technique: "Normal",
+        play_pattern: "Regular Play"
+    })
+})
+.then(res => res.json())
+.then(data => console.log(data));
+Technical Notes For Developers
+Machine Learning Model
+
+The API uses:
+
+XGBoost Classifier (binary:logistic)
+
+trained on football shot-event data.
+
+Output
+
+The prediction is generated using:
+
+model.predict_proba(X)[0][1]
+
+which returns:
+
+probability of class 1 (Goal)
+
+This probability is the xG value.
+
+Preprocessing Pipeline
+
+A saved preprocessing pipeline automatically handles:
+
+categorical encoding
+feature transformation
+numerical preprocessing
+
+Frontend should send human-readable categorical values.
+
+Example:
+
+"body_part": "Right Foot"
+
+NOT:
+
+"body_part": 2
+CORS
+
+CORS is currently NOT enabled by default.
+
+If frontend runs on another port (React/Vue/Next.js), install:
+
+pip install flask-cors
+
+Then add:
+
+from flask_cors import CORS
+CORS(app)
